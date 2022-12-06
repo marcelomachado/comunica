@@ -462,7 +462,7 @@ describe('HttpServiceSparqlEndpoint', () => {
         await instance.run(stdout, stderr);
 
         const server = http.createServer.mock.results[0].value;
-        expect(server.listen).toHaveBeenCalledWith(port);
+        expect(server.listen).toHaveBeenCalledWith(port, 'localhost');
       });
 
       it('should call bind handleRequest with the correct arguments', async() => {

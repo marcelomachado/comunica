@@ -34,6 +34,7 @@ export class HttpServiceSparqlEndpoint {
   public readonly timeout: number;
   public readonly port: number;
   public readonly workers: number;
+  public readonly hostname: string;
 
   public readonly invalidateCacheBeforeQuery: boolean;
   public readonly freshWorkerPerQuery: boolean;
@@ -45,6 +46,7 @@ export class HttpServiceSparqlEndpoint {
     this.context = args.context || {};
     this.timeout = args.timeout ?? 60_000;
     this.port = args.port ?? 3_000;
+    this.hostname = args.hostname ?? 'localhost';
     this.workers = args.workers ?? 1;
     this.invalidateCacheBeforeQuery = Boolean(args.invalidateCacheBeforeQuery);
     this.freshWorkerPerQuery = Boolean(args.freshWorkerPerQuery);
@@ -178,7 +180,7 @@ export class HttpServiceSparqlEndpoint {
    * @param {module:stream.internal.Writable} stderr The error stream to log errors to.
    */
   public async runMaster(stdout: Writable, stderr: Writable): Promise<void> {
-    stderr.write(`Server running on http://localhost:${this.port}/sparql\n`);
+    stderr.write(`Server running on http://${this.hostname}:${this.port}/sparql\n`);
 
     // Create workers
     for (let i = 0; i < this.workers; i++) {
@@ -247,8 +249,8 @@ export class HttpServiceSparqlEndpoint {
 
     // Start the server
     const server = http.createServer(this.handleRequest.bind(this, engine, variants, stdout, stderr));
-    server.listen(this.port);
-    stderr.write(`Server worker (${process.pid}) running on http://localhost:${this.port}/sparql\n`);
+    server.listen(this.port, this.hostname);
+    stderr.write(`Server worker (${process.pid}) running on http://${this.hostname}:${this.port}/sparql\n`);
 
     // Keep track of all open connections
     const openConnections: Set<ServerResponse> = new Set();
@@ -326,7 +328,7 @@ export class HttpServiceSparqlEndpoint {
       response.writeHead(301,
         { 'content-type': HttpServiceSparqlEndpoint.MIME_JSON,
           'Access-Control-Allow-Origin': '*',
-          Location: `http://localhost:${this.port}/sparql${requestUrl.search || ''}` });
+          Location: `http://${this.hostname}:${this.port}/sparql${requestUrl.search || ''}` });
       response.end(JSON.stringify({ message: 'Queries are accepted on /sparql. Redirected.' }));
       return;
     }
@@ -657,6 +659,7 @@ export interface IHttpServiceSparqlEndpointArgs extends IDynamicQueryEngineOptio
   context?: any;
   timeout?: number;
   port?: number;
+  hostname?: string;
   workers?: number;
   invalidateCacheBeforeQuery?: boolean;
   freshWorkerPerQuery?: boolean;

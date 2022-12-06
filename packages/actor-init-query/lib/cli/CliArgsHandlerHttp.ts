@@ -21,6 +21,13 @@ export class CliArgsHandlerHttp implements ICliArgsHandler {
           default: 3_000,
           group: 'Recommended options:',
         },
+        hostname: {
+          alias: 'h',
+          type: 'string',
+          describe: 'The hostname to run on',
+          default: 'localhost',
+          group: 'Recommended options:',
+        },
         workers: {
           alias: 'w',
           type: 'number',
