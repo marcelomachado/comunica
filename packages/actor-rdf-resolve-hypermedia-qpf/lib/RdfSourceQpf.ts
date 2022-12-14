@@ -53,14 +53,14 @@ export class RdfSourceQpf implements IQuadSource {
     }
     this.searchForm = searchForm;
     this.defaultGraph = metadata.defaultGraph ? DF.namedNode(metadata.defaultGraph) : undefined;
-    if (initialQuads) {
-      let wrappedQuads: AsyncIterator<RDF.Quad> = wrap<RDF.Quad>(initialQuads);
-      if (this.defaultGraph) {
-        wrappedQuads = this.reverseMapQuadsToDefaultGraph(wrappedQuads);
-      }
-      wrappedQuads.setProperty('metadata', metadata);
-      this.cacheQuads(wrappedQuads, DF.variable(''), DF.variable(''), DF.variable(''), DF.variable(''));
-    }
+    // if (initialQuads) {
+    //   let wrappedQuads: AsyncIterator<RDF.Quad> = wrap<RDF.Quad>(initialQuads);
+    //   if (this.defaultGraph) {
+    //     wrappedQuads = this.reverseMapQuadsToDefaultGraph(wrappedQuads);
+    //   }
+    //   wrappedQuads.setProperty('metadata', metadata);
+    //   this.cacheQuads(wrappedQuads, DF.variable(''), DF.variable(''), DF.variable(''), DF.variable(''));
+    // }
   }
 
   /**

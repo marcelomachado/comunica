@@ -8,6 +8,7 @@ import { ActionObserver } from '@comunica/core';
  */
 export class ActionObserverHttp extends ActionObserver<IActionHttp, IActorHttpOutput> {
   public readonly httpInvalidator: ActorHttpInvalidateListenable;
+  public requestsTimings: any = [];
   public requests = 0;
 
   /* eslint-disable max-len */
@@ -18,6 +19,7 @@ export class ActionObserverHttp extends ActionObserver<IActionHttp, IActorHttpOu
     super(args);
     this.bus.subscribeObserver(this);
     this.httpInvalidator.addInvalidateListener(() => {
+      this.requestsTimings = [];
       this.requests = 0;
     });
   }
@@ -25,6 +27,13 @@ export class ActionObserverHttp extends ActionObserver<IActionHttp, IActorHttpOu
 
   public onRun(actor: Actor<IActionHttp, IActorTest, IActorHttpOutput>,
     action: IActionHttp, output: Promise<IActorHttpOutput>): void {
+      output.then((res) => {
+          this.requestsTimings.push([
+              action.input.toString(),
+              res.headers.get('time_start'),
+              res.headers.get('time_end'),
+          ]);
+      });
     this.requests++;
   }
 }

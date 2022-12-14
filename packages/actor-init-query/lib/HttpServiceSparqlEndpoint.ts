@@ -46,7 +46,7 @@ export class HttpServiceSparqlEndpoint {
     this.context = args.context || {};
     this.timeout = args.timeout ?? 60_000;
     this.port = args.port ?? 3_000;
-    this.hostname = args.hostname ?? 'localhost';
+    this.hostname = args.hostname ?? '0.0.0.0';
     this.workers = args.workers ?? 1;
     this.invalidateCacheBeforeQuery = Boolean(args.invalidateCacheBeforeQuery);
     this.freshWorkerPerQuery = Boolean(args.freshWorkerPerQuery);

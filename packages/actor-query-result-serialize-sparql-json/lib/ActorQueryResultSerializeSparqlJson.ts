@@ -116,7 +116,7 @@ export class ActorQueryResultSerializeSparqlJson extends ActorQueryResultSeriali
 
         // Push metadata footer
         if (this.emitMetadata) {
-          data.push(`,\n"metadata": { "httpRequests": ${this.httpObserver.requests} }`);
+          data.push(`,\n"metadata": { "httpRequestsTimings": ${JSON.stringify(this.httpObserver.requestsTimings)}, "httpRequests": ${this.httpObserver.requests} }`);
         }
 
         // End stream

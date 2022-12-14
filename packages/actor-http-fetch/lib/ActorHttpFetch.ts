@@ -52,6 +52,7 @@ export class ActorHttpFetch extends ActorHttp {
     let lastError: unknown;
     // The retryCount is 0-based. Therefore, add 1 to triesLeft.
     let triesLeft = retryCount + 1;
+    let epoch = Date.now();
 
     // When retry count is greater than 0, repeat fetch.
     while (triesLeft-- > 0) {
@@ -61,6 +62,8 @@ export class ActorHttpFetch extends ActorHttp {
         if (throwOnServerError && response.status >= 500 && response.status < 600) {
           throw new Error(`Server replied with response code ${response.status}: ${response.statusText}`);
         }
+        response.headers.append('time_end', `${Date.now()}`);
+        response.headers.append('time_start', `${epoch}`);
         return response;
       } catch (error: unknown) {
         lastError = error;
